@@ -1,0 +1,207 @@
+const express = require('express');
+const app = express();
+app.get('/', function(req, res) {
+    res.send("Hello Express Node Js");
+}).listen(4805);
+
+********************************************************************************************************************************
+
+const express = require('express');
+const app = express();
+
+app.get('/about', function(req, res) {
+    res.send("This is router for about Us page");
+}).listen(4806);
+
+******************************************************************************************************************************
+
+const express = require('express');
+const app = express();
+
+app.get('/', function(req, res) {
+    res.send("This is router for Home page");
+});
+
+app.get('/about', function(req, res) {
+    res.send("This is router for about Us page");
+});
+
+app.get('/login', function(req, res) {
+    res.send("This is router for Login page");
+});
+
+app.listen(4806);
+
+**********************************************************************************************************************************
+
+const express = require('express');
+const app = express();
+
+app.get('/', function(req, res) {
+    res.send("This is router for Home page");
+});
+
+app.get('/about', function(req, res) {
+    res.send("This is router for about Us page");
+});
+
+app.get('/login', function(req, res) {
+    res.send("This is router for Login page");
+});
+
+app.post('/login', function(req, res) {
+    res.send("This is router for Login page post");
+});
+
+app.put('/login', function(req, res) {
+    res.send("This is router for Login page put");
+});
+
+app.delete('/login', function(req, res) {
+    res.send("This is router for Login page delete");
+});
+
+
+app.listen(4806);
+
+****************************************************************************************************************************
+
+Middleware
+
+Middleware functions are functions that have access to the request object ( req ), the response object ( res ), and the next middleware function in the application's request-response cycle. The next middleware function is commonly denoted by a variable named next.
+
+As name suggests it comes in middle of something and that is request and response cycle
+
+A middleware is basically a function that will the receive the Request and Response objects, just like your route Handlers do. As a third argument you have another function which you should call once your middleware code completed.
+
+Types of express middleware
+Application level middleware app.use
+Router level middleware router.use
+Built-in middleware express.static,express.json,express.urlencoded
+Error handling middleware app.use(err,req,res,next)
+Thirdparty middleware bodyparser,cookieparser
+
+const express = require('express');
+const app = express();
+const checkUrl =function(req,res,next){
+    console.log("Current Route is", req.originalUrl);
+    next();
+}
+app.use(checkUrl);
+app.get('/',function(req,res){
+    res.send("Hello this is home page");
+});
+app.get('/about',function(req,res){
+    res.send("Hello this is about page");
+});
+app.get('/login',function(req,res){
+    res.send("Hello this is login page");
+}).listen(1000)
+
+************************************************************************************************************************************
+
+We can call Router on specific pages also
+
+Example =>
+
+const express = require('express');
+const app = express();
+
+const router = express.Router();
+
+const checkurl = function(req, res, next) {
+    console.log("Current Route is", req.originalUrl);
+    next();
+}
+
+//app.use(checkUrl);
+
+app.get('/', function(req, res) {
+    res.send("Hello this is home page");
+});
+
+
+
+router.get('/login', checkurl, function(req, res) {
+    res.send("Hello this is login page");
+});
+
+router.get('/about', checkurl, function(req, res) {
+    res.send("Hello this is about page");
+});
+
+app.use('/', router);
+
+app.listen(1200);
+
+*******************************************************************************************************************************
+
+We can put the code in a separate file also
+
+another.js =>
+
+module.exports = function(req, res, next) {
+    console.log("Current Route is", req.originalUrl);
+    next();
+}
+
+middleware.js =>
+
+const express = require('express');
+const app = express();
+
+const router = express.Router();
+
+const checkurl = require('./another');
+
+//app.use(checkUrl);
+
+app.get('/', function(req, res) {
+    res.send("Hello this is home page");
+});
+
+
+
+router.get('/login', checkurl, function(req, res) {
+    res.send("Hello this is login page");
+});
+
+router.get('/about', checkurl, function(req, res) {
+    res.send("Hello this is about page");
+});
+
+app.use('/', router);
+
+app.listen(1200);
+
+**********************************************************************************************************************
+
+Open file with Router
+
+const express = require('express');
+const app = express();
+const router = express.Router();
+
+const checkUrl = require('./separatefile');
+
+app.get('/',function(req,res){
+   // res.send("Hello this is home page");
+    res.sendFile(__dirname+"/home.html");
+});
+
+router.get('/about',checkUrl,function(req,res){
+   //res.send("Helllo..this is about page");
+   res.sendFile(__dirname+"/about.html");
+});
+
+router.get('/login',checkUrl,function(req,res){
+    //res.send("Hello..this is logged in page");
+    res.sendFile(__dirname+"/login.html");
+})
+
+app.use('/',router);
+app.listen(3800);
+
+**********************************************************************************************************************************
+
+
